@@ -1,0 +1,13 @@
+{
+  "benchmark_name": "gemmini",
+  "common_simulation_outputs": [
+    "uartlog"
+  ],
+  "workloads": [
+    {
+      "name": "matmul_tilings-baremetal",
+      "bootbinary": "matmul_tilings-baremetal",
+      "rootfs": "../../../sw/firesim-software/boards/default/installers/firesim/dummy.rootfs"
+    }
+  ]
+}

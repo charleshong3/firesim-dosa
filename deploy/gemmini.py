@@ -1,7 +1,8 @@
 import subprocess
 import yaml
+import pathlib
 
-#subprocess.run(["firesim", "launchrunfarm"])
+subprocess.run(["firesim", "launchrunfarm"])
 workloads = []
 target_configs = []
 # for i in range(773):
@@ -14,12 +15,16 @@ target_configs = []
 #     for t in ["conv"]:
 #         workloads.append(f"gemmini_{i}pe_{t}.json")
 #         target_configs.append(f"firesim_rocket_singlecore_{i}pe4kdummygemmini_nofirstlayer_no_nic_l2_llc4mb_ddr3")
-workloads = ["gemmini_matmul.json", "gemmini_conv.json"]
-target_configs.append("firesim_rocket_singlecore_16pe4kdummygemmini_nofirstlayer_no_nic_l2_llc4mb_ddr3")
-target_configs.append(target_configs[0])
+# workloads = ["gemmini_matmul.json", "gemmini_conv.json"]
+if pathlib.Path("workloads/gemmini/conv_tilings-baremetal").is_file():
+    workloads.append("gemmini_conv.json")
+    target_configs.append("firesim_rocket_singlecore_16pe4kdummygemmini_nofirstlayer_no_nic_l2_llc4mb_ddr3")
+if pathlib.Path("workloads/gemmini/matmul_tilings-baremetal").is_file():
+    workloads.append("gemmini_matmul.json")
+    target_configs.append("firesim_rocket_singlecore_16pe4kdummygemmini_nofirstlayer_no_nic_l2_llc4mb_ddr3")
 
 for i in range(len(workloads)):
-    config_runtime_path = "/home/centos/firesim/deploy/config_runtime.yaml"
+    config_runtime_path = "config_runtime.yaml"
     with open(config_runtime_path, "r") as f:
         config = yaml.safe_load(f)
     config["workload"]["workload_name"] = workloads[i]
@@ -29,6 +34,6 @@ for i in range(len(workloads)):
     subprocess.run(["firesim", "infrasetup"])
     subprocess.run(["firesim", "runworkload"])
 
-# p = subprocess.Popen(["firesim", "terminaterunfarm"], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
-# p.communicate("yes\n".encode())
+p = subprocess.Popen(["firesim", "terminaterunfarm"], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+p.communicate("yes\n".encode())
 

@@ -1,6 +1,12 @@
 import subprocess
 import yaml
 import pathlib
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--pe_dim", type=int, default=16)
+args = parser.parse_args()
+pe_dim = args.pe_dim
 
 subprocess.run(["firesim", "launchrunfarm"])
 workloads = []
@@ -18,10 +24,10 @@ target_configs = []
 # workloads = ["gemmini_matmul.json", "gemmini_conv.json"]
 if pathlib.Path("workloads/gemmini/conv_tilings-baremetal").is_file():
     workloads.append("gemmini_conv.json")
-    target_configs.append("firesim_rocket_singlecore_16pe4kdummygemmini_nofirstlayer_no_nic_l2_llc4mb_ddr3")
+    target_configs.append(f"firesim_rocket_singlecore_{pe_dim}pe4kdummygemmini_nofirstlayer_no_nic_l2_llc4mb_ddr3")
 if pathlib.Path("workloads/gemmini/matmul_tilings-baremetal").is_file():
     workloads.append("gemmini_matmul.json")
-    target_configs.append("firesim_rocket_singlecore_16pe4kdummygemmini_nofirstlayer_no_nic_l2_llc4mb_ddr3")
+    target_configs.append(f"firesim_rocket_singlecore_{pe_dim}pe4kdummygemmini_nofirstlayer_no_nic_l2_llc4mb_ddr3")
 
 for i in range(len(workloads)):
     config_runtime_path = "config_runtime.yaml"
